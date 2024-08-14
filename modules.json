@@ -5,6 +5,51 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
+                    "bismark/align": {
+                        "branch": "master",
+                        "git_sha": "51bd90acb70c72928c73584ab59644470523b8fc",
+                        "installed_by": ["modules"]
+                    },
+                    "bismark/coverage2cytosine": {
+                        "branch": "master",
+                        "git_sha": "51bd90acb70c72928c73584ab59644470523b8fc",
+                        "installed_by": ["modules"]
+                    },
+                    "bismark/deduplicate": {
+                        "branch": "master",
+                        "git_sha": "51bd90acb70c72928c73584ab59644470523b8fc",
+                        "installed_by": ["modules"]
+                    },
+                    "bismark/genomepreparation": {
+                        "branch": "master",
+                        "git_sha": "51bd90acb70c72928c73584ab59644470523b8fc",
+                        "installed_by": ["modules"]
+                    },
+                    "bismark/methylationextractor": {
+                        "branch": "master",
+                        "git_sha": "51bd90acb70c72928c73584ab59644470523b8fc",
+                        "installed_by": ["modules"]
+                    },
+                    "bismark/report": {
+                        "branch": "master",
+                        "git_sha": "51bd90acb70c72928c73584ab59644470523b8fc",
+                        "installed_by": ["modules"]
+                    },
+                    "bismark/summary": {
+                        "branch": "master",
+                        "git_sha": "51bd90acb70c72928c73584ab59644470523b8fc",
+                        "installed_by": ["modules"]
+                    },
+                    "cat/fastq": {
+                        "branch": "master",
+                        "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
+                        "installed_by": ["modules"]
+                    },
+                    "custom/dumpsoftwareversions": {
+                        "branch": "master",
+                        "git_sha": "82024cf6325d2ee194e7f056d841ecad2f6856e9",
+                        "installed_by": ["modules"]
+                    },
                     "fastqc": {
                         "branch": "master",
                         "git_sha": "285a50500f9e02578d90b3ce6382ea3c30216acd",
@@ -13,6 +58,31 @@
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "b7ebe95761cd389603f9cc0e0dc384c0f663815a",
+                        "installed_by": ["modules"]
+                    },
+                    "qualimap/bamqc": {
+                        "branch": "master",
+                        "git_sha": "46eca555142d6e597729fcb682adcc791796f514",
+                        "installed_by": ["modules"]
+                    },
+                    "samtools/faidx": {
+                        "branch": "master",
+                        "git_sha": "04fbbc7c43cebc0b95d5b126f6d9fe4effa33519",
+                        "installed_by": ["modules"]
+                    },
+                    "samtools/sort": {
+                        "branch": "master",
+                        "git_sha": "46eca555142d6e597729fcb682adcc791796f514",
+                        "installed_by": ["modules"]
+                    },
+                    "trimgalore": {
+                        "branch": "master",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
+                        "installed_by": ["modules"]
+                    },
+                    "untar": {
+                        "branch": "master",
+                        "git_sha": "4e5f4687318f24ba944a13609d3ea6ebd890737d",
                         "installed_by": ["modules"]
                     }
                 }
