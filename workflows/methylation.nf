@@ -105,88 +105,112 @@ workflow METHYLATION {
         }
         .set { ch_fastq }
 
-
-
-
-
-
-
-
-
-
-        
-        }
-    
-    take:
-    ch_samplesheet // channel: samplesheet read in from --input
-
-    main:
-
-    ch_multiqc_files = Channel.empty()
+    //
+    // MODULE: CAT_FASTQ Combine same sample fastq files
+    //
+    CAT_FASTQ (
+        ch_fastq.multiple
+    )
+    .reads
+    .mix(ch_fastq.single)
+    .set { ch_cat_fastq }
+    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
     //
-    // MODULE: Run FastQC
+    // MODULE: FASTQC
     //
     FASTQC (
-        ch_samplesheet
+        ch_cat_fastq
     )
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
     //
-    // Collate and save software versions
+    // MODULE: TRIMGALORE
     //
-    softwareVersionsToYAML(ch_versions)
-        .collectFile(
-            storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_pipeline_software_mqc_versions.yml',
-            sort: true,
-            newLine: true
-        ).set { ch_collated_versions }
-
-    //
-    // MODULE: MultiQC
-    //
-    ch_multiqc_config        = Channel.fromPath(
-        "$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-    ch_multiqc_custom_config = params.multiqc_config ?
-        Channel.fromPath(params.multiqc_config, checkIfExists: true) :
-        Channel.empty()
-    ch_multiqc_logo          = params.multiqc_logo ?
-        Channel.fromPath(params.multiqc_logo, checkIfExists: true) :
-        Channel.empty()
-
-    summary_params      = paramsSummaryMap(
-        workflow, parameters_schema: "nextflow_schema.json")
-    ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
-
-    ch_multiqc_custom_methods_description = params.multiqc_methods_description ?
-        file(params.multiqc_methods_description, checkIfExists: true) :
-        file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-    ch_methods_description                = Channel.value(
-        methodsDescriptionText(ch_multiqc_custom_methods_description))
-
-    ch_multiqc_files = ch_multiqc_files.mix(
-        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-    ch_multiqc_files = ch_multiqc_files.mix(
-        ch_methods_description.collectFile(
-            name: 'methods_description_mqc.yaml',
-            sort: true
+    if (!params.skip_trimming) {
+        TRIMGALORE(
+            ch_cat_fastq
         )
-    )
+        reads = TRIMGALORE.out.reads
+        ch_versions = ch_versions.mix(TRIMGALORE.out.versions.first())
+    } else {
+        reads = ch_cat_fastq
+    }
 
-    MULTIQC (
-        ch_multiqc_files.collect(),
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList()
-    )
 
-    emit:
-    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
+
+    //
+    // SUBWORKFLOW: BISMARK (Alignment, deduplication, methylation extraction)
+    //
+    BISMARK (
+        reads,
+        PREPARE_GENOME.out.bismark_index,
+        params.skip_deduplication || params.rrbs,
+        params.cytosine_report || params.nomeseq
+    )
+    ch_versions     = ch_versions.mix(BISMARK.out.versions.unique{ it.baseName })
+    ch_bam          = BISMARK.out.bam
+    ch_dedup        = BISMARK.out.dedup
+    ch_aligner_mqc  = BISMARK.out.mqc
+
+    //
+    // MODULE: QUALIMAP_BAMQC
+    //
+    QUALIMAP_BAMQC (
+        ch_dedup,
+        params.bamqc_regions_file ? Channel.fromPath( params.bamqc_regions_file, checkIfExists: true ).toList() : []
+    )
+    ch_versions = ch_versions.mix(QUALIMAP_BAMQC.out.versions.first())
+
+    //
+    // MODULE: MULTIQC
+    //
+    if (!params.skip_multiqc) {
+        workflow_summary    = WorkflowMethylation.paramsSummaryMultiqc(workflow, summary_params)
+        ch_workflow_summary = Channel.value(workflow_summary)
+
+        methods_desciption      = WorkflowMethylation.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
+        ch_methods_description  = Channel.value(methods_desciption)
+
+
+        ch_multiqc_files = Channel.empty()
+        ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+        ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+        ch_multiqc_files = ch_multiqc_files.mix(QUALIMAP_BAMQC.out.results.collect{ it[1] }.ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_aligner_mqc.ifEmpty([]))
+        if (!params.skip_trimming) {
+            ch_multiqc_files = ch_multiqc_files.mix(TRIMGALORE.out.log.collect{ it[1] })
+        }
+        ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{ it[1] }.ifEmpty([]))
+
+        MULTIQC (
+            ch_multiqc_files.collect(),
+            ch_multiqc_config.toList(),
+            ch_multiqc_custom_config.toList(),
+            ch_multiqc_logo.toList()
+        )
+        multiqc_report  = MULTIQC.out.report.toList()
+        ch_versions     = ch_versions.mix(MULTIQC.out.versions)
+
+        }
 }
+
+    COMPLETION EMAIL AND SUMMARY
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+workflow.onComplete {
+    if (params.email || params.email_on_fail) {
+        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
+    }
+    NfcoreTemplate.dump_parameters(workflow, params)
+    NfcoreTemplate.summary(workflow, params, log)
+    if (params.hook_url) {
+        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
+    }
+}
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
