@@ -10,7 +10,7 @@ def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 def summary_params = paramsSummaryMap(workflow)
 
 // Print parameter summary
-paramsSummaryLog(workflow)
+log.info logo + paramsSummaryLog(workflow)
 
 WorkflowMethylation.initialise(params, log)
 

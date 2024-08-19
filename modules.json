@@ -1,6 +1,6 @@
 {
     "name": "nf-core/methylation",
-    "homePage": "https://github.com/nf-core/methylation",
+    "homePage": "https://github.com/eperezme/nf-methylation-workflow",
     "repos": {
         "https://github.com/nf-core/modules.git": {
             "modules": {
