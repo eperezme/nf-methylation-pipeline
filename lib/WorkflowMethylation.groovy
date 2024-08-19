@@ -1,11 +1,11 @@
 //
-// This file holds several functions specific to the workflow/methylseq.nf in the nf-core/methylseq pipeline
+// This file holds several functions specific to the workflow/methylation.nf
 //
 
 import nextflow.Nextflow
 import groovy.text.SimpleTemplateEngine
 
-class WorkflowMethylseq {
+class WorkflowMethylation {
 
     //
     // Check and validate parameters
@@ -16,7 +16,7 @@ class WorkflowMethylseq {
 
 
         if (!params.fasta) {
-            if (!params.bismark_index || params.aligner != 'bismark') {
+            if (!params.bismark_index) {
                 Nextflow.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
             }
         }

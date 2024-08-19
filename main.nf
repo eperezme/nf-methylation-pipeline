@@ -45,18 +45,6 @@ if (params.validate_params) {
 
 WorkflowMain.initialise(workflow, params, log)
 
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_methylation_pipeline'
-include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_methylation_pipeline'
-
-include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_methylation_pipeline'
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     NAMED WORKFLOWS FOR PIPELINE

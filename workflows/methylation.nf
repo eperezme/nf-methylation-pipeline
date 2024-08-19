@@ -46,15 +46,13 @@ include { BISMARK      } from '../subworkflows/local/bismark'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { CAT_FASTQ                     } from '../modules/nf-core/fastq/cat/main'
+include { CAT_FASTQ                     } from '../modules/nf-core/cat/fastq/main'
 include { FASTQC                        } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { TRIMGALORE                    } from '../modules/nf-core/trim_galore/main'
+include { TRIMGALORE                    } from '../modules/nf-core/trimgalore/main'
 include { QUALIMAP_BAMQC                } from '../modules/nf-core/qualimap/bamqc/main'
 // include { PRESEQ_LCEXTRAP             } from '../modules/nf-core/preseq/lcextrap/main'
-
-include { paramsSummaryMultiqc          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -144,7 +142,7 @@ workflow METHYLATION {
     //
     BISMARK (
         reads,
-        PREPARE_GENOME.out.bismark_index,
+        INDEX_GENOME.out.bismark_index,
         params.skip_deduplication || params.rrbs,
         params.cytosine_report || params.nomeseq
     )
@@ -161,6 +159,15 @@ workflow METHYLATION {
         params.bamqc_regions_file ? Channel.fromPath( params.bamqc_regions_file, checkIfExists: true ).toList() : []
     )
     ch_versions = ch_versions.mix(QUALIMAP_BAMQC.out.versions.first())
+
+
+    //
+    // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
+    // 
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    )
+
 
     //
     // MODULE: MULTIQC
