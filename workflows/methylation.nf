@@ -10,7 +10,7 @@ def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 def summary_params = paramsSummaryMap(workflow)
 
 // Print parameter summary
-log.info + paramsSummaryLog(workflow)
+paramsSummaryLog(workflow)
 
 WorkflowMethylation.initialise(params, log)
 
@@ -195,7 +195,7 @@ workflow METHYLATION {
 
         }
 }
-
+/*
     COMPLETION EMAIL AND SUMMARY
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
