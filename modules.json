@@ -72,7 +72,7 @@
                     },
                     "samtools/sort": {
                         "branch": "master",
-                        "git_sha": "ea8d39b3ccc8866f4a87a350a7228a9105ae3866",
+                        "git_sha": "46eca555142d6e597729fcb682adcc791796f514",
                         "installed_by": ["modules"]
                     },
                     "trimgalore": {
