@@ -38,6 +38,8 @@ workflow BISMARK {
      */
     SAMTOOLS_SORT_ALIGNED (
         BISMARK_ALIGN.out.bam,
+        [[:],[]]
+
     )
     versions = versions.mix(SAMTOOLS_SORT_ALIGNED.out.versions)
 
@@ -51,7 +53,7 @@ workflow BISMARK {
     } else {
 
         BISMARK_DEDUPLICATE (
-            BISMARK_ALIGN.out.bam, []
+            BISMARK_ALIGN.out.bam,
         )
 
         alignments = BISMARK_DEDUPLICATE.out.bam
@@ -109,7 +111,9 @@ workflow BISMARK {
      * SAMTOOLS SORT DEDUPLICATED
      */
     SAMTOOLS_SORT_DEDUPLICATED (
-        alignments, []
+        alignments,
+        [[:],[]]
+
     )
     versions = versions.mix(SAMTOOLS_SORT_DEDUPLICATED.out.versions)
 
