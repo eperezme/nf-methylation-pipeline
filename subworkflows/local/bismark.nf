@@ -19,6 +19,8 @@ workflow BISMARK {
     skip_deduplication      // boolean: skip deduplication step
     cytosine_report         // boolean: generate cytosine report (coverage2cytosine)
 
+
+
     main:
     versions = Channel.empty()
 
@@ -36,7 +38,6 @@ workflow BISMARK {
      */
     SAMTOOLS_SORT_ALIGNED (
         BISMARK_ALIGN.out.bam,
-        bismark_index
     )
     versions = versions.mix(SAMTOOLS_SORT_ALIGNED.out.versions)
 
@@ -109,7 +110,6 @@ workflow BISMARK {
      */
     SAMTOOLS_SORT_DEDUPLICATED (
         alignments,
-        bismark_index
     )
     versions = versions.mix(SAMTOOLS_SORT_DEDUPLICATED.out.versions)
 
