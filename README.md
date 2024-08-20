@@ -5,21 +5,13 @@
   </picture>
 </h1>
 
-[![GitHub Actions CI Status](https://github.com/nf-core/methylation/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/methylation/actions/workflows/ci.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-core/methylation/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/methylation/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/methylation/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
-[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
-
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg)](https://www.nextflow.io/)
-[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
-[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/methylation)
 
-[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23methylation-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/methylation)[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
 ## Introduction
 
-**nf-core/methylation** is a bioinformatics pipeline that ...
+**methylation** is a bioinformatics pipeline that ...
 
 <!-- TODO nf-core:
    Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
@@ -29,31 +21,42 @@
 
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+
+0. Prepare reference Genome ([`Bismark`](https://www.bioinformatics.babraham.ac.uk/projects/bismark/)) (Optional) 
+1. Merge re-sequenced samples (`cat`)
+2. Perform QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+3. Adapter Trimming ([`Trim Galore`](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/))
+4. Align reads to reference genome ([`Bismark`](https://www.bioinformatics.babraham.ac.uk/projects/bismark/))
+5. Deduplicate reads ([`Bismark`](https://www.bioinformatics.babraham.ac.uk/projects/bismark/))
+6. Methylation calling ([`Bismark`](https://www.bioinformatics.babraham.ac.uk/projects/bismark/))
+7. Generate methylation reports ([`Bismark`](https://www.bioinformatics.babraham.ac.uk/projects/bismark/))
+8. Alignment QC ([`Qualimap`](http://qualimap.bioinfo.cipf.es/))	
+9. Generate HTML report ([`MultiQC`](https://multiqc.info/))
+
 
 ## Usage
 
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
+### Prepare the samplesheet.csv
+First, you need to create a `samplesheet.csv` file. This file should contain the following columns:
 
-First, prepare a samplesheet with your input data that looks as follows:
-
-`samplesheet.csv`:
+- `sample`: The name of the sample.
+- `fastq1`: The path to the first pair of reads.
+- `fastq2`: The path to the second pair of reads.
 
 ```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+sample,fastq1,fastq2
+sample1,/path/to/sample1_R1.fastq.gz,/path/to/sample1_R2.fastq.gz
+sample2,/path/to/sample2_R1.fastq.gz,/path/to/sample2_R2.fastq.gz
+sample2,/path/to/sample2_1_R1.fastq.gz,/path/to/sample2_1_R2.fastq.gz
+sample3,/path/to/sample3_R1.fastq.gz
 ```
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
+> If you have single-end reads, leave empty the `fastq2` column. If you have more than one pair of reads for a sample, you can add more rows with the same `sample` name.
 
--->
 
 Now, you can run the pipeline using:
 
