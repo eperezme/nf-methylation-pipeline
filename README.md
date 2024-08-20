@@ -23,6 +23,8 @@
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 
 
+### Pipeline steps
+
 0. Prepare reference Genome ([`Bismark`](https://www.bioinformatics.babraham.ac.uk/projects/bismark/)) (Optional) 
 1. Merge re-sequenced samples (`cat`)
 2. Perform QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
@@ -40,6 +42,13 @@
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
+### Clone the repo
+To be able to use the pipeline, you need to clone the repository to your local machine.
+
+```bash
+git clone https://github.com/eperezme/nf-methylation-workflow.git
+```
+
 ### Prepare the samplesheet.csv
 First, you need to create a `samplesheet.csv` file. This file should contain the following columns:
 
@@ -54,16 +63,16 @@ sample2,/path/to/sample2_R1.fastq.gz,/path/to/sample2_R2.fastq.gz
 sample2,/path/to/sample2_1_R1.fastq.gz,/path/to/sample2_1_R2.fastq.gz
 sample3,/path/to/sample3_R1.fastq.gz
 ```
-
+> [!NOTE]
 > If you have single-end reads, leave empty the `fastq2` column. If you have more than one pair of reads for a sample, you can add more rows with the same `sample` name.
 
+### Run the pipeline
 
 Now, you can run the pipeline using:
 
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
-nextflow run nf-core/methylation \
+nextflow run main.nf \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
    --outdir <OUTDIR>
@@ -77,9 +86,8 @@ For more details and further functionality, please refer to the [usage documenta
 
 ## Pipeline output
 
-To see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/methylation/results) tab on the nf-core website pipeline page.
-For more details about the output files and reports, please refer to the
-[output documentation](https://nf-co.re/methylation/output).
+The main output of the pipeline is a directory containing the following files:
+<!-- TODO, add the files that will output -->
 
 ## Credits
 
@@ -93,14 +101,7 @@ We thank the following people for their extensive assistance in the development 
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
-For further information or help, don't hesitate to get in touch on the [Slack `#methylation` channel](https://nfcore.slack.com/channels/methylation) (you can join with [this invite](https://nf-co.re/join/slack)).
-
 ## Citations
-
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use nf-core/methylation for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
-
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
