@@ -150,6 +150,8 @@ workflow METHYLATION {
     ch_bam          = BISMARK.out.bam
     ch_dedup        = BISMARK.out.dedup
     ch_aligner_mqc  = BISMARK.out.mqc
+    ch_bedgraph     = BISMARK.out.bedgraph
+    ch_cov          = BISMARK.out.cov
 
     //
     // MODULE: QUALIMAP_BAMQC

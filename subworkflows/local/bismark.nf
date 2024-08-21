@@ -132,6 +132,8 @@ workflow BISMARK {
     // EXPORTS
 
     emit:
+    bedgraph        = BISMARK_METHYLATIONEXTRACTOR.out.bedgraph // channel: [ val(meta), [ bedgraph ] ] 
+    cov             = BISMARK_METHYLATIONEXTRACTOR.out.coverage // channel: [ val(meta), [ coverage ] ]
     bam             = SAMTOOLS_SORT_ALIGNED.out.bam         // channel: [ val(meta), [ bam ] ]
     dedup           = SAMTOOLS_SORT_DEDUPLICATED.out.bam    // channel: [ val(meta), [ bam ] ]
     mqc             = multiqc_files                         // path: *(html,txt)

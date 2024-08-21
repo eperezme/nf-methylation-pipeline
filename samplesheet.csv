@@ -1,0 +1,2 @@
+sample,fastq_1,fastq_2
+PMBC_DNA,data/PMBC_DNA_R1.fastq.gz,data/PMBC_DNA_R2.fastq.gz
