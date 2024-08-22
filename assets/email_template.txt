@@ -4,7 +4,7 @@
   |\\ | |__  __ /  ` /  \\ |__) |__         }  {
   | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                         `._,._,'
-  nf-core/methylation ${version}
+  nf-core/methylation v${version}
 ----------------------------------------------------
 Run Name: $runName
 
