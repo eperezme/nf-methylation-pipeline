@@ -42,12 +42,6 @@
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-### Clone the repo
-To be able to use the pipeline, you need to clone the repository to your local machine.
-
-```bash
-git clone https://github.com/eperezme/nf-methylation-workflow.git
-```
 
 ### Prepare the samplesheet.csv
 First, you need to create a `samplesheet.csv` file. This file should contain the following columns:
@@ -72,8 +66,8 @@ Now, you can run the pipeline using:
 
 
 ```bash
-nextflow run main.nf \
-   -profile <docker/singularity/.../institute> \
+nextflow run eperezme/nf-methylation-workflow \
+   -profile <docker/singularity/conda/mamba> \
    --input samplesheet.csv \
    --outdir <OUTDIR>
 ```
