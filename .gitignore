@@ -7,3 +7,5 @@ testing/
 testing*
 *.pyc
 output/
+Data
+testData
