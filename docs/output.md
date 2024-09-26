@@ -1,4 +1,4 @@
-# nf-core/methylseq Output
+# nf-core/methylation Output
 
 ## Introduction
 
