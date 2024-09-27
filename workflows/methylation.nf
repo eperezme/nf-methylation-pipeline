@@ -40,6 +40,14 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 include { INDEX_GENOME } from '../subworkflows/local/genome_index'
 include { BISMARK      } from '../subworkflows/local/bismark'
 
+
+//
+// MODULES
+//
+
+include { TRIMDIVERSITY } from '../modules/local/trimdiversity/main'
+
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
@@ -53,7 +61,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpso
 include { TRIMGALORE                    } from '../modules/nf-core/trimgalore/main'
 include { QUALIMAP_BAMQC                } from '../modules/nf-core/qualimap/bamqc/main'
 // include { PRESEQ_LCEXTRAP             } from '../modules/nf-core/preseq/lcextrap/main'
-include { TRIMDIVERSITY                 } from '../modules/local/trimdiversity/main'
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
