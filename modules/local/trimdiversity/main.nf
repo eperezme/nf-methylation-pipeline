@@ -2,10 +2,10 @@ process TRIMDIVERSITY {
     tag "$meta.id"
     label 'process_single'
 
-    conda "conda-forge::python=2.7"
+    conda "conda-forge::python=3.12"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/python:2.7' :
-        'biocontainers/python:2.7' }"
+        'https://depot.galaxyproject.org/singularity/python:3.12' :
+        'biocontainers/python:3.12' }"
 
     input:
     tuple val(meta), path(reads)
