@@ -6,6 +6,6 @@ results/
 testing/
 testing*
 *.pyc
-output/
-Data
-testData
+null/
+Data/
+Output/
