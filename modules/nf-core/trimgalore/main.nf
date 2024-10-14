@@ -18,14 +18,14 @@ process TRIMGALORE {
     tuple val(meta), path("*.zip")                              , emit: zip     , optional: true
     path "versions.yml"                                         , emit: versions
 
+    params:
+    quality = 20  // Define a default quality threshold; you can change it when calling the process
+
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    // Calculate number of --cores for TrimGalore based on value of task.cpus
-    // See: https://github.com/FelixKrueger/TrimGalore/blob/master/Changelog.md#version-060-release-on-1-mar-2019
-    // See: https://github.com/nf-core/atacseq/pull/65
     def cores = 1
     if (task.cpus) {
         cores = (task.cpus as int) - 4
@@ -34,7 +34,6 @@ process TRIMGALORE {
         if (cores > 8) cores = 8
     }
 
-    // Added soft-links to original fastqs for consistent naming in MultiQC
     def prefix = task.ext.prefix ?: "${meta.id}"
     if (meta.single_end) {
         def args_list = args.split("\\s(?=--)").toList()
@@ -43,6 +42,7 @@ process TRIMGALORE {
         [ ! -f  ${prefix}.fastq.gz ] && ln -s $reads ${prefix}.fastq.gz
         trim_galore \\
             ${args_list.join(' ')} \\
+            --quality ${params.quality} \\
             --cores $cores \\
             --gzip \\
             ${prefix}.fastq.gz
@@ -59,6 +59,7 @@ process TRIMGALORE {
         [ ! -f  ${prefix}_2.fastq.gz ] && ln -s ${reads[1]} ${prefix}_2.fastq.gz
         trim_galore \\
             $args \\
+            --quality ${params.quality} \\
             --cores $cores \\
             --paired \\
             --gzip \\
