@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/eperezme/nf-methylation-workflow/master/nextflow_schema.json",
     "title": "Methylation pipeline parameters",
     "description": "Methylation (Bisulfite-Sequencing) Best Practice analysis pipeline, part of the nf-core community.",
