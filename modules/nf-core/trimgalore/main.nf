@@ -18,9 +18,6 @@ process TRIMGALORE {
     tuple val(meta), path("*.zip")                              , emit: zip     , optional: true
     path "versions.yml"                                         , emit: versions
 
-    params:
-    quality = 20  // Define a default quality threshold; you can change it when calling the process
-
     when:
     task.ext.when == null || task.ext.when
 
